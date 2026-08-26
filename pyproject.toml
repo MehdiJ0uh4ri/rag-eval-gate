@@ -1,0 +1,14 @@
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]   # long lines are allowed in prompt strings and comments
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E402"]   # tests set RAG_OFFLINE before importing app modules
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

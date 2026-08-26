@@ -1,0 +1,16 @@
+-r requirements.txt
+
+# Evaluation stack. Pinned hard: RAGAS renames metric columns between minor
+# versions and a rename silently zeroes a gated metric. Bumping this pin is a
+# dedicated PR that re-baselines -- never a dependabot automerge.
+ragas==0.2.14
+langchain-anthropic==0.3.4
+langchain-core==0.3.29
+langchain-huggingface==0.1.2
+sentence-transformers==3.3.1
+datasets==3.2.0
+pandas==2.2.3
+
+# Test + lint
+pytest==8.3.4
+ruff==0.8.6

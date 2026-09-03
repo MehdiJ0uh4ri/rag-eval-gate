@@ -1,0 +1,28 @@
+services:
+  rag:
+    build: .
+    image: acme-rag:local
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY in .env}
+      RAG_GENERATOR_MODEL: ${RAG_GENERATOR_MODEL:-claude-opus-5}
+      RAG_TOP_K: ${RAG_TOP_K:-4}
+      RAG_PROMPT_VARIANT: ${RAG_PROMPT_VARIANT:-grounded}
+      RAG_EFFORT: ${RAG_EFFORT:-low}
+    ports: ["8080:8080"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8080/healthz')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  k6:
+    image: grafana/k6:0.55.0
+    depends_on:
+      rag: {condition: service_healthy}
+    volumes:
+      - ./perf:/perf:ro
+      - ./artifacts:/artifacts
+    environment:
+      BASE_URL: http://rag:8080
+    command:
+      ["run", "--summary-export", "/artifacts/k6-summary.json", "/perf/k6-rag.js"]

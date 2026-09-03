@@ -1,0 +1,225 @@
+# Golden Q&A dataset for the Acme Payments RAG assistant.
+#
+# Every entry is reviewed by a human before merge (CODEOWNERS gates this file).
+# Fields:
+#   id             stable slug; NEVER renumber -- per-question history keys off it
+#   question       verbatim user phrasing
+#   ground_truth   the reference answer, written from the corpus, not from a model
+#   reference_ids  doc names that must appear among the retrieved contexts
+#   tags           slice labels; the gate reports per-tag as well as overall
+#   must_not_say   substrings that indicate a known hallucination for this item
+#
+# Slice budget: ~60% factual, ~20% multi-hop, ~20% unanswerable. The unanswerable
+# items are what keep faithfulness honest -- a model that always answers scores
+# well on the other 80%.
+
+- id: refund-authorized-state
+  question: Can I refund a payment that is only authorized and not captured yet?
+  ground_truth: >-
+    No. A payment must be in the captured state before it can be refunded.
+    Refunding an authorized payment returns 409 payment_not_captured; you
+    should void the authorization instead.
+  reference_ids: [01-refunds.md]
+  tags: [factual, error-codes]
+  must_not_say: ["yes, you can refund an authorized"]
+
+- id: refund-max-count
+  question: How many refunds can a single payment have?
+  ground_truth: >-
+    At most 20. The 21st refund on the same payment returns 429 refund_limit.
+  reference_ids: [01-refunds.md]
+  tags: [factual, limits]
+  must_not_say: ["unlimited", "no limit"]
+
+- id: refund-window-days
+  question: Is there a deadline after which I can no longer refund through the API?
+  ground_truth: >-
+    Yes. Refunds more than 180 days after the capture date cannot be processed
+    through the API and must be handled as a separate payout.
+  reference_ids: [01-refunds.md]
+  tags: [factual, limits]
+  must_not_say: ["90 days", "120 days", "1 year"]
+
+- id: refund-sepa-timing
+  question: How long does a SEPA refund take to settle compared to a card refund?
+  ground_truth: >-
+    SEPA refunds settle in 2 business days; card refunds settle in 5 to 10
+    business days.
+  reference_ids: [01-refunds.md]
+  tags: [factual, timing]
+  must_not_say: ["instant", "same day"]
+
+- id: webhook-signature-scheme
+  question: How do I verify a webhook signature?
+  ground_truth: >-
+    Parse the Acme-Signature header, which has the form t=<unix_ts>,v1=<hex_hmac>.
+    Compute an HMAC-SHA256 over the string "{t}.{raw_body}" using the endpoint
+    signing secret (whsec_ prefix), and compare it to v1 in constant time.
+  reference_ids: [02-webhooks.md]
+  tags: [factual, security]
+  must_not_say: ["sha1", "rsa", "public key"]
+
+- id: webhook-replay-window
+  question: What is the webhook replay protection window?
+  ground_truth: >-
+    300 seconds. Reject a delivery whose signature timestamp is more than
+    300 seconds old.
+  reference_ids: [02-webhooks.md]
+  tags: [factual, security]
+  must_not_say: ["600 seconds", "configurable"]
+
+- id: webhook-retry-schedule
+  question: What happens if my webhook endpoint is down for a week?
+  ground_truth: >-
+    Deliveries are retried with exponential backoff for up to 3 days (5m, 30m,
+    2h, 5h, 10h, then every 12h). After 3 days the endpoint is disabled and an
+    endpoint.disabled event is emailed to the account owner, so events from the
+    remaining days are not delivered.
+  reference_ids: [02-webhooks.md]
+  tags: [multi-hop, reliability]
+  must_not_say: ["retried indefinitely", "for 7 days"]
+
+- id: webhook-dedupe
+  question: Can the same webhook event arrive twice?
+  ground_truth: >-
+    Yes. Delivery is at-least-once, so consumers must deduplicate on the event
+    id, which stays stable across retries.
+  reference_ids: [02-webhooks.md]
+  tags: [factual, reliability]
+  must_not_say: ["exactly once", "cannot arrive twice"]
+
+- id: idempotency-ttl
+  question: How long is an idempotency key remembered?
+  ground_truth: >-
+    24 hours. After that the same key is treated as a new request.
+  reference_ids: [03-idempotency.md]
+  tags: [factual, limits]
+  must_not_say: ["7 days", "forever", "48 hours"]
+
+- id: idempotency-body-mismatch
+  question: What happens if I reuse an idempotency key with a different request body?
+  ground_truth: >-
+    The request is rejected with 422 idempotency_key_reuse.
+  reference_ids: [03-idempotency.md]
+  tags: [factual, error-codes]
+  must_not_say: ["409", "the new body is processed"]
+
+- id: idempotency-scope
+  question: Do idempotency keys work on DELETE requests?
+  ground_truth: >-
+    No. Idempotency applies to POST endpoints only; it does not apply to GET,
+    DELETE, or the Files API.
+  reference_ids: [03-idempotency.md]
+  tags: [factual, scope]
+  must_not_say: ["yes, delete is idempotent via the header"]
+
+- id: rate-limit-write
+  question: What is the write rate limit and what do I get when I exceed it?
+  ground_truth: >-
+    Writes (POST) are limited to 50 requests per second per API key. Exceeding
+    it returns 429 rate_limit_exceeded with a Retry-After header in seconds.
+  reference_ids: [04-rate-limits.md]
+  tags: [factual, limits]
+  must_not_say: ["100 requests per second", "503"]
+
+- id: rate-limit-reporting
+  question: How many reporting requests can I make per minute?
+  ground_truth: >-
+    10 requests per minute.
+  reference_ids: [04-rate-limits.md]
+  tags: [factual, limits]
+  must_not_say: ["per second"]
+
+- id: rate-limit-sandbox-raise
+  question: Can I get my sandbox rate limits raised for a load test?
+  ground_truth: >-
+    No. Rate limits are not raised on request in the sandbox environment. Only
+    production limits can be raised, by contacting support with a traffic
+    forecast.
+  reference_ids: [04-rate-limits.md]
+  tags: [factual, scope]
+  must_not_say: ["yes, open a ticket to raise sandbox"]
+
+- id: payout-cancel-state
+  question: Which payouts can I cancel?
+  ground_truth: >-
+    Only payouts in the pending state. Payouts that are in_transit or paid
+    cannot be cancelled.
+  reference_ids: [05-payouts.md]
+  tags: [factual, states]
+  must_not_say: ["in_transit can be cancelled"]
+
+- id: payout-minimum
+  question: What happens to a balance smaller than the payout minimum?
+  ground_truth: >-
+    The minimum payout is 1.00 in the settlement currency; a balance under the
+    minimum rolls into the next payout.
+  reference_ids: [05-payouts.md]
+  tags: [factual, limits]
+  must_not_say: ["is forfeited", "is returned to the customer"]
+
+- id: payout-failure-recovery
+  question: My payout failed with account_closed. Where is the money and how long until I see it?
+  ground_truth: >-
+    Failed payouts return the funds to your Acme balance within 1 business day.
+    account_closed is one of the common failure codes alongside no_account and
+    debit_not_authorized.
+  reference_ids: [05-payouts.md]
+  tags: [multi-hop, recovery]
+  must_not_say: ["the funds are held by the bank", "5 business days"]
+
+- id: dispute-evidence-window
+  question: How long do I have to submit dispute evidence?
+  ground_truth: >-
+    7 days from dispute creation. The Acme submission window closes at 7 days
+    even if the issuing bank deadline is longer.
+  reference_ids: [06-disputes.md]
+  tags: [factual, timing]
+  must_not_say: ["21 days", "30 days"]
+
+- id: dispute-fee-refund
+  question: If I win a dispute, do I get the 15.00 fee back?
+  ground_truth: >-
+    Yes. If you win, both the disputed amount and the 15.00 dispute fee are
+    returned to your balance.
+  reference_ids: [06-disputes.md]
+  tags: [factual, fees]
+  must_not_say: ["the fee is non-refundable"]
+
+- id: dispute-then-refund
+  question: A customer disputed a payment and also asked for a refund. Can I refund it?
+  ground_truth: >-
+    No. Disputed payments cannot be refunded; the API returns 409
+    payment_disputed. The disputed amount and the fee were already debited when
+    the dispute was created.
+  reference_ids: [06-disputes.md, 01-refunds.md]
+  tags: [multi-hop, error-codes]
+  must_not_say: ["yes, issue a partial refund"]
+
+- id: unanswerable-crypto
+  question: Which cryptocurrencies can I accept through Acme Payments?
+  ground_truth: I do not have that in the documentation.
+  reference_ids: []
+  tags: [unanswerable]
+  must_not_say: ["bitcoin", "ethereum", "usdc"]
+
+- id: unanswerable-pricing
+  question: What percentage does Acme charge per successful card transaction?
+  ground_truth: I do not have that in the documentation.
+  reference_ids: []
+  tags: [unanswerable]
+  must_not_say: ["2.9", "1.4", "basis points"]
+
+- id: unanswerable-sla
+  question: What is the contractual uptime SLA and the service credit schedule?
+  ground_truth: I do not have that in the documentation.
+  reference_ids: []
+  tags: [unanswerable]
+  must_not_say: ["99.9", "99.99", "service credit"]
+
+- id: unanswerable-3ds-exemption
+  question: Under PSD2, which SCA exemption applies to recurring merchant-initiated payments?
+  ground_truth: I do not have that in the documentation.
+  reference_ids: []
+  tags: [unanswerable]
+  must_not_say: ["low value exemption", "trusted beneficiary", "transaction risk analysis"]

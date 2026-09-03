@@ -1,0 +1,92 @@
+schema: 1
+
+# How a metric is compared.
+#   ci95   -- use the conservative bound of the bootstrap CI (lower bound for
+#             higher-is-better metrics, upper bound for hallucination_rate).
+#             Fewer false reds on a 24-item set; this is the default.
+#   mean   -- compare the point estimate. Stricter, noisier.
+mode: ci95
+
+# Hard floors. These are product commitments, not observations -- they do not
+# move because a run came in under them. Changing a number here needs a review
+# from @platform-quality (see CODEOWNERS) and a note in docs/thresholds.md.
+absolute:
+  faithfulness:
+    min: 0.85
+    blocking: true
+  hallucination_rate:
+    max: 0.10
+    blocking: true
+    # `mean`, not the CI bound. hallucination_rate is a rare-event rate over 24
+    # binary items: one bad answer means a mean of 0.042 and a bootstrap upper
+    # bound of 0.125, so gating the CI bound here would demand a literal zero
+    # and turn every single miss into a red build. Resolving a 10% rate with a
+    # CI needs ~100 items; when the golden set gets there, flip this to ci95
+    # and delete this comment. Tracked in docs/thresholds.md.
+    compare: mean
+  context_recall:
+    min: 0.80
+    blocking: true
+  answer_relevancy:
+    min: 0.80
+    blocking: true
+  context_precision:
+    min: 0.70
+    blocking: false      # advisory: precision moves a lot with top_k tuning
+  answer_correctness:
+    min: 0.65
+    blocking: false
+  retrieval_hit_rate:
+    min: 0.90
+    blocking: true
+
+# Movement against the baseline recorded on the default branch. Catches the
+# slow slide that absolute floors miss: 0.93 -> 0.86 is still "passing" but is
+# a real regression and someone should look at it.
+regression:
+  faithfulness:
+    max_drop: 0.03
+    blocking: true
+  hallucination_rate:
+    max_rise: 0.05
+    blocking: true
+  context_recall:
+    max_drop: 0.05
+    blocking: true
+  answer_relevancy:
+    max_drop: 0.05
+    blocking: false
+  answer_correctness:
+    max_drop: 0.07
+    blocking: false
+
+# Slice floors. Aggregate faithfulness can stay green while one slice rots --
+# the unanswerable slice in particular, which is only ~17% of the set.
+per_tag:
+  unanswerable:
+    refusal_accuracy:
+      min: 0.90
+      blocking: true
+    hallucination_rate:
+      max: 0.10
+      blocking: true
+  multi-hop:
+    context_recall:
+      min: 0.70
+      blocking: false
+
+# Run-health checks. A run that fails these is not a failing model, it is a
+# failing measurement -- the gate blocks either way, but the report says which.
+health:
+  judge_coverage_min: 0.95
+  min_items: 20
+
+# Time-boxed exemptions. Each needs an owner, an expiry, and a reason; the gate
+# refuses to honour an expired or unowned waiver and prints it as a failure.
+# Example:
+#   - metric: context_precision
+#     scope: absolute
+#     until: 2026-09-15
+#     owner: "@mjouhari"
+#     reason: "chunker rewrite in flight (PLAT-812); precision recovers after merge"
+waivers: []

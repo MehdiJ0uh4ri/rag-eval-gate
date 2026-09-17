@@ -1,0 +1,165 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  # One eval per branch. Evals cost money; a push-happy branch should not run
+  # five of them concurrently.
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  static:
+    name: lint + dataset validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-eval.txt
+      - run: ruff check app eval golden tests
+      - name: validate golden dataset
+        run: python -m golden.loader
+      - name: unit tests (offline)
+        env:
+          RAG_OFFLINE: '1'
+        run: pytest -q tests
+
+  quality-gate:
+    name: RAG quality gate
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      decision: ${{ steps.gate.outputs.decision }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # promote_baseline and the regression check compare against main's
+          # committed baseline; a shallow clone is enough since the baseline is
+          # a tracked file, not git history.
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: cache embedding model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-${{ hashFiles('ci/models.env') }}
+
+      - name: bootstrap
+        run: ./ci/bootstrap.sh
+
+      - name: run quality gate
+        id: gate
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        # continue-on-error so the report is always published; the explicit
+        # check step below is what actually fails the job.
+        continue-on-error: true
+        run: |
+          ./ci/quality-gate.sh
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+          echo "decision=$(jq -r .decision artifacts/verdict.json)" >> "$GITHUB_OUTPUT"
+
+      - name: upload eval artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rag-eval-${{ github.run_id }}
+          path: |
+            artifacts/results.json
+            artifacts/answers.json
+            artifacts/report.md
+            artifacts/verdict.json
+          retention-days: 30
+
+      - name: comment on PR
+        if: always() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: ./ci/pr-comment.sh artifacts/report.md
+
+      - name: enforce verdict
+        run: |
+          decision=$(jq -r .decision artifacts/verdict.json)
+          echo "gate decision: $decision"
+          test "$decision" != "FAIL"
+
+  perf-gate:
+    name: k6 perf gate
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: grafana/setup-k6-action@v1
+      - name: build image
+        run: docker build -t acme-rag:ci .
+      - name: run service
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          docker run -d --name rag -p 8080:8080 \
+            -e ANTHROPIC_API_KEY \
+            -e RAG_EFFORT=low \
+            acme-rag:ci
+      - name: perf gate
+        run: ./ci/perf-gate.sh http://localhost:8080
+      - name: service logs
+        if: failure()
+        run: docker logs rag
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: k6-summary-${{ github.run_id }}
+          path: artifacts/k6-summary.json
+
+  promote-baseline:
+    name: promote baseline
+    needs: [quality-gate, perf-gate]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-eval.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: rag-eval-${{ github.run_id }}
+          path: artifacts
+      - name: promote
+        run: python -m eval.promote_baseline --results artifacts/results.json
+      - name: commit baseline
+        run: |
+          if git diff --quiet eval/baseline/main.json; then
+            echo "baseline unchanged"; exit 0
+          fi
+          git config user.name  "rag-eval-bot"
+          git config user.email "rag-eval-bot@users.noreply.github.com"
+          git add eval/baseline/main.json
+          git commit -m "chore(eval): baseline from ${GITHUB_SHA::12} [skip ci]"
+          git push

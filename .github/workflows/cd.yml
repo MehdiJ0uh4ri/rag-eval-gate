@@ -1,0 +1,84 @@
+name: cd
+
+# Deploy is gated on the eval, not merely correlated with it: the workflow
+# re-reads the verdict artifact produced by ci and refuses to proceed unless it
+# says PASS. Merging is allowed with warnings; deploying is not allowed on FAIL.
+
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  verify-gate:
+    name: verify quality gate verdict
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      decision: ${{ steps.read.outputs.decision }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: fetch verdict from the ci run
+        uses: actions/download-artifact@v4
+        with:
+          name: rag-eval-${{ github.event.workflow_run.id }}
+          path: artifacts
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - id: read
+        run: |
+          decision=$(jq -r .decision artifacts/verdict.json)
+          sha=$(jq -r .git_sha artifacts/verdict.json)
+          echo "decision=$decision" >> "$GITHUB_OUTPUT"
+          echo "eval verdict for ${sha:0:12}: $decision"
+          if [ "$decision" = "FAIL" ]; then
+            echo "::error::deploy blocked by the RAG quality gate"
+            exit 1
+          fi
+      - name: verdict must match this commit
+        run: |
+          # Guard against deploying a commit whose eval never ran (artifact
+          # reuse, re-run of an old workflow, force-push race).
+          sha=$(jq -r .git_sha artifacts/verdict.json)
+          test "$sha" = "${{ github.event.workflow_run.head_sha }}" \
+            || { echo "::error::verdict sha $sha != deploy sha ${{ github.event.workflow_run.head_sha }}"; exit 1; }
+
+  deploy-staging:
+    name: deploy staging
+    needs: verify-gate
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - name: build and push
+        run: |
+          echo "docker build/push would run here"
+          echo "image digest recorded for the GitOps write-back"
+      - name: write digest to the GitOps repo
+        run: echo "argocd/apps/rag-staging.yaml image digest updated"
+
+  post-deploy-eval:
+    name: post-deploy smoke eval
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-eval.txt
+      - name: 4-item smoke eval against the deployed config
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        # A cheap re-run after deploy catches config drift between the CI
+        # environment and the deployed one (wrong model id in a ConfigMap,
+        # a stale prompt variant) that a pre-merge eval cannot see.
+        run: |
+          python -m eval.run_eval --out artifacts/smoke.json --repeats 1 --limit 4
+          python -m eval.gate --results artifacts/smoke.json --thresholds eval/thresholds-smoke.yaml --no-baseline

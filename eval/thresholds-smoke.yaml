@@ -1,0 +1,27 @@
+schema: 1
+
+# Smoke thresholds for the 4-item post-deploy / pre-merge wiring check.
+#
+# This is NOT a quality gate and must never be used as one: 4 items cannot
+# distinguish a model regression from noise. It answers one question -- "is the
+# deployed thing wired to the right model, prompt, and corpus?" -- so the floors
+# are set where only a broken deployment trips them.
+mode: mean
+
+absolute:
+  faithfulness:
+    min: 0.60
+    blocking: true
+  retrieval_hit_rate:
+    min: 0.75
+    blocking: true
+
+# No regression block: a 4-item mean against a 24-item baseline is meaningless.
+regression: {}
+per_tag: {}
+
+health:
+  judge_coverage_min: 0.90
+  min_items: 4
+
+waivers: []

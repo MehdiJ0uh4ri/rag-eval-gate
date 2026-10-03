@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="830" viewBox="0 0 1400 830" font-family="Segoe UI,Helvetica,Arial,sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#57606A"/></marker></defs>
+<rect width="1400" height="830" fill="#FFFFFF"/>
+<text x="40" y="45" font-size="18" font-weight="700" fill="#1F2328">rag-eval-gate</text>
+<text x="191" y="45" font-size="15" fill="#57606A">&#8212; a RAGAS quality gate that blocks a deploy the way a k6 perf gate does</text>
+<rect x="300" y="76" width="1060" height="150" rx="8" fill="#F6F8FA" stroke="#8250DF" stroke-width="1.3"/>
+<text x="312" y="96" font-size="12" fill="#6E40C9">GitHub Actions · ci.yml</text>
+<rect x="300" y="270" width="620" height="290" rx="8" fill="#F6F8FA" stroke="#BF8700" stroke-width="1.3"/>
+<text x="312" y="290" font-size="12" fill="#9A6700">eval/ — the gate</text>
+<rect x="960" y="270" width="400" height="290" rx="8" fill="#F6F8FA" stroke="#0969DA" stroke-width="1.3"/>
+<text x="972" y="290" font-size="12" fill="#0969DA">app/ — RAG service under test</text>
+<rect x="300" y="620" width="640" height="150" rx="8" fill="#F6F8FA" stroke="#1A7F37" stroke-width="1.3"/>
+<text x="312" y="640" font-size="12" fill="#1A7F37">GitHub Actions · cd.yml</text>
+<path d="M 270.0 144.0 L 330.0 144.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 560.0 144.0 L 590.0 144.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 820.0 144.0 L 850.0 144.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 1050.0 144.0 L 1080.0 144.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 705.0 176.0 L 705.0 242.0 Q 705.0 250.0 713.0 250.0 L 757.0 250.0 Q 765.0 250.0 765.0 258.0 L 765.0 306.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 765.0 370.0 L 765.0 384.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 765.0 448.0 L 765.0 462.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 580.0 338.0 L 592.0 338.0 Q 600.0 338.0 600.0 346.0 L 600.0 486.0 Q 600.0 494.0 608.0 494.0 L 640.0 494.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 580.0 494.0 L 640.0 494.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 890.0 338.0 L 990.0 338.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<text x="940" y="333" font-size="10" fill="#57606A" text-anchor="middle" paint-order="stroke" stroke="#FFFFFF" stroke-width="3.5">in-process</text>
+<path d="M 1160.0 384.0 L 1160.0 370.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 990.0 494.0 L 978.0 494.0 Q 970.0 494.0 970.0 486.0 L 970.0 346.0 Q 970.0 338.0 978.0 338.0 L 990.0 338.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 950.0 176.0 L 950.0 408.0 Q 950.0 416.0 958.0 416.0 L 990.0 416.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 1330.0 338.0 L 1344.0 338.0 Q 1352.0 338.0 1352.0 346.0 L 1352.0 624.0 Q 1352.0 632.0 1344.0 632.0 L 1330.0 632.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)" stroke-dasharray="5 4"/>
+<text x="1352" y="480" font-size="10" fill="#57606A" text-anchor="middle" paint-order="stroke" stroke="#FFFFFF" stroke-width="3.5">answer</text>
+<path d="M 890.0 416.0 L 932.0 416.0 Q 940.0 416.0 940.0 424.0 L 940.0 624.0 Q 940.0 632.0 948.0 632.0 L 990.0 632.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)" stroke-dasharray="5 4"/>
+<text x="940" y="519" font-size="10" fill="#57606A" text-anchor="middle" paint-order="stroke" stroke="#FFFFFF" stroke-width="3.5">RAGAS judge ×3</text>
+<path d="M 590.0 144.0 L 298.0 144.0 Q 290.0 144.0 290.0 152.0 L 290.0 486.0 Q 290.0 494.0 282.0 494.0 L 270.0 494.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<text x="290" y="314" font-size="10" fill="#57606A" text-anchor="middle" paint-order="stroke" stroke="#FFFFFF" stroke-width="3.5">verdict</text>
+<path d="M 765.0 526.0 L 765.0 583.0 Q 765.0 591.0 757.0 591.0 L 428.0 591.0 Q 420.0 591.0 420.0 599.0 L 420.0 656.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<text x="592" y="586" font-size="10" fill="#57606A" text-anchor="middle" paint-order="stroke" stroke="#FFFFFF" stroke-width="3.5">PASS</text>
+<path d="M 510.0 688.0 L 530.0 688.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 700.0 688.0 L 720.0 688.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 270.0 602.0 L 607.0 602.0 Q 615.0 602.0 615.0 594.0 L 615.0 346.0 Q 615.0 338.0 623.0 338.0 L 640.0 338.0" fill="none" stroke="#57606A" stroke-width="1.4" marker-end="url(#a)" stroke-dasharray="5 4"/>
+<text x="442" y="597" font-size="10" fill="#57606A" text-anchor="middle" paint-order="stroke" stroke="#FFFFFF" stroke-width="3.5">rescan</text>
+<rect x="40" y="112" width="230" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(52.0,132.0)"><circle cx="12" cy="12" r="11.5" fill="#1F2328"/><path d="M12 5c-3.6 0-6.5 2.9-6.5 6.6 0 2.9 1.9 5.3 4.4 6.2.3.1.4-.1.4-.3v-1.1c-1.8.4-2.2-.8-2.2-.8-.3-.8-.7-1-.7-1-.6-.4 0-.4 0-.4.7 0 1 .7 1 .7.6 1 1.6.7 2 .6.1-.4.2-.7.4-.9-1.4-.2-2.9-.7-2.9-3.2 0-.7.2-1.3.7-1.8-.1-.2-.3-.9.1-1.8 0 0 .5-.2 1.8.7.5-.2 1.1-.2 1.6-.2s1.1 0 1.6.2c1.2-.9 1.8-.7 1.8-.7.4.9.1 1.6.1 1.8.4.5.7 1.1.7 1.8 0 2.5-1.5 3-2.9 3.2.2.2.4.6.4 1.2v1.8c0 .2.1.4.4.3 2.5-.9 4.4-3.3 4.4-6.2C18.5 7.9 15.6 5 12 5z" fill="#fff"/></g>
+<text x="86" y="142" font-size="12.5" font-weight="700" fill="#1F2328">Pull request</text>
+<text x="86" y="156" font-size="10" fill="#57606A">every PR runs the gate</text>
+<rect x="40" y="462" width="230" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(52.0,482.0)"><circle cx="12" cy="12" r="11.5" fill="#1F2328"/><path d="M12 5c-3.6 0-6.5 2.9-6.5 6.6 0 2.9 1.9 5.3 4.4 6.2.3.1.4-.1.4-.3v-1.1c-1.8.4-2.2-.8-2.2-.8-.3-.8-.7-1-.7-1-.6-.4 0-.4 0-.4.7 0 1 .7 1 .7.6 1 1.6.7 2 .6.1-.4.2-.7.4-.9-1.4-.2-2.9-.7-2.9-3.2 0-.7.2-1.3.7-1.8-.1-.2-.3-.9.1-1.8 0 0 .5-.2 1.8.7.5-.2 1.1-.2 1.6-.2s1.1 0 1.6.2c1.2-.9 1.8-.7 1.8-.7.4.9.1 1.6.1 1.8.4.5.7 1.1.7 1.8 0 2.5-1.5 3-2.9 3.2.2.2.4.6.4 1.2v1.8c0 .2.1.4.4.3 2.5-.9 4.4-3.3 4.4-6.2C18.5 7.9 15.6 5 12 5z" fill="#fff"/></g>
+<text x="86" y="492" font-size="12.5" font-weight="700" fill="#1F2328">PR comment</text>
+<text x="86" y="506" font-size="10" fill="#57606A">FAIL blocks the merge</text>
+<rect x="40" y="570" width="230" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(52.0,590.0)"><circle cx="12" cy="12" r="11" fill="#fff" stroke="#57606A" stroke-width="1.6"/><path d="M12 6.4V12l3.6 2.2" stroke="#57606A" stroke-width="1.8" fill="none"/></g>
+<text x="86" y="600" font-size="12.5" font-weight="700" fill="#1F2328">nightly.yml</text>
+<text x="86" y="614" font-size="10" fill="#57606A">rescan unchanged main → files an issue</text>
+<rect x="330" y="112" width="230" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(342.0,132.0)"><circle cx="12" cy="12" r="11" fill="#1A7F37"/><path d="M7.4 12.4l3 3 6-6.4" stroke="#fff" stroke-width="2.2" fill="none"/></g>
+<text x="376" y="142" font-size="12.5" font-weight="700" fill="#1F2328">static</text>
+<text x="376" y="156" font-size="10" fill="#57606A">lint + golden validation (free)</text>
+<rect x="590" y="112" width="230" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(602.0,132.0)"><rect width="24" height="24" rx="5" fill="#BF8700"/><g fill="#fff"><rect x="4.6" y="7" width="2.4" height="10" rx=".6"/><rect x="17" y="7" width="2.4" height="10" rx=".6"/><rect x="7.6" y="10.8" width="8.8" height="2.4" rx=".6"/></g></g>
+<text x="636" y="142" font-size="12.5" font-weight="700" fill="#1F2328">quality-gate</text>
+<text x="636" y="156" font-size="10" fill="#57606A">24 answers → RAGAS ×3</text>
+<rect x="850" y="112" width="200" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(862.0,132.0)"><rect width="24" height="24" rx="5" fill="#1A7F37"/><g fill="#fff"><rect x="6" y="12" width="2.8" height="6" rx=".6"/><rect x="10.6" y="8.4" width="2.8" height="9.6" rx=".6"/><rect x="15.2" y="10.4" width="2.8" height="7.6" rx=".6"/></g></g>
+<text x="896" y="142" font-size="12.5" font-weight="700" fill="#1F2328">perf-gate</text>
+<text x="896" y="156" font-size="10" fill="#57606A">k6 thresholds</text>
+<rect x="1080" y="112" width="250" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(1092.0,132.0)"><rect width="24" height="24" rx="5" fill="#0969DA"/><g fill="#fff"><path d="M12 4.2l7 3.4-7 3.4-7-3.4z"/><path d="M5 9.2l6.4 3.1v7.4L5 16.6z" opacity=".8"/><path d="M19 9.2l-6.4 3.1v7.4L19 16.6z" opacity=".6"/></g></g>
+<text x="1126" y="142" font-size="12.5" font-weight="700" fill="#1F2328">promote-baseline</text>
+<text x="1126" y="156" font-size="10" fill="#57606A">on main only</text>
+<rect x="330" y="306" width="250" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(342.0,326.0)"><rect width="24" height="24" rx="5" fill="#F6F8FA" stroke="#D0D7DE"/><g fill="#57606A"><path d="M8 6h5.4l3.6 3.6V18a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z" fill="#fff" stroke="#57606A" stroke-width="1.1"/><path d="M9.4 12.4h5.2v1H9.4zm0 2.6h5.2v1H9.4zm0-5.2h3v1h-3z"/></g></g>
+<text x="376" y="336" font-size="12.5" font-weight="700" fill="#1F2328">thresholds.yaml</text>
+<text x="376" y="350" font-size="10" fill="#57606A">faithfulness ≥ 0.85 · slice floors</text>
+<rect x="330" y="462" width="250" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(342.0,482.0)"><rect width="24" height="24" rx="5" fill="#F6F8FA" stroke="#D0D7DE"/><g fill="#57606A"><path d="M8 6h5.4l3.6 3.6V18a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z" fill="#fff" stroke="#57606A" stroke-width="1.1"/><path d="M9.4 12.4h5.2v1H9.4zm0 2.6h5.2v1H9.4zm0-5.2h3v1h-3z"/></g></g>
+<text x="376" y="492" font-size="12.5" font-weight="700" fill="#1F2328">baseline/main.json</text>
+<text x="376" y="506" font-size="10" fill="#57606A">regression vs main</text>
+<rect x="640" y="306" width="250" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(652.0,326.0)"><rect width="24" height="24" rx="5" fill="#F6F8FA"/><path d="M11.9 3.5c-1.9 0-3.6.3-3.6 2.2v1.6h3.7v.6H6.6c-1.6 0-2.9 1-2.9 3.4 0 2.2 1.2 3.4 2.7 3.4h1.4v-1.9c0-1.6 1.4-3 3-3h3.5c1.3 0 2.4-1.1 2.4-2.4V5.7c0-1.4-1.2-2.2-2.6-2.2h-2.2zm-2 1.2c.4 0 .7.3.7.7s-.3.7-.7.7-.7-.3-.7-.7.3-.7.7-.7z" fill="#3776AB"/><path d="M12.1 20.5c1.9 0 3.6-.3 3.6-2.2v-1.6H12v-.6h5.4c1.6 0 2.9-1 2.9-3.4 0-2.2-1.2-3.4-2.7-3.4h-1.4v1.9c0 1.6-1.4 3-3 3H9.7c-1.3 0-2.4 1.1-2.4 2.4v2.7c0 1.4 1.2 2.2 2.6 2.2h2.2zm2-1.2c-.4 0-.7-.3-.7-.7s.3-.7.7-.7.7.3.7.7-.3.7-.7.7z" fill="#FFD43B"/></g>
+<text x="686" y="336" font-size="12.5" font-weight="700" fill="#1F2328">run_eval.py</text>
+<text x="686" y="350" font-size="10" fill="#57606A">24 golden Q&amp;A → answers</text>
+<rect x="640" y="384" width="250" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(652.0,404.0)"><rect width="24" height="24" rx="5" fill="#1A7F37"/><g fill="#fff"><rect x="6" y="12" width="2.8" height="6" rx=".6"/><rect x="10.6" y="8.4" width="2.8" height="9.6" rx=".6"/><rect x="15.2" y="10.4" width="2.8" height="7.6" rx=".6"/></g></g>
+<text x="686" y="414" font-size="12.5" font-weight="700" fill="#1F2328">metrics.py</text>
+<text x="686" y="428" font-size="10" fill="#57606A">3 judge passes · median · bootstrap CI</text>
+<rect x="640" y="462" width="250" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(652.0,482.0)"><rect width="24" height="24" rx="5" fill="#BF8700"/><g fill="#fff"><rect x="4.6" y="7" width="2.4" height="10" rx=".6"/><rect x="17" y="7" width="2.4" height="10" rx=".6"/><rect x="7.6" y="10.8" width="8.8" height="2.4" rx=".6"/></g></g>
+<text x="686" y="492" font-size="12.5" font-weight="700" fill="#1F2328">gate.py</text>
+<text x="686" y="506" font-size="10" fill="#57606A">compares the conservative CI bound</text>
+<rect x="990" y="306" width="340" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(1002.0,326.0)"><rect width="24" height="24" rx="5" fill="#0969DA"/><g stroke="#fff" stroke-width="2" fill="none"><circle cx="11" cy="10.6" r="4.2"/><path d="M14.2 13.8l3.4 3.4"/></g></g>
+<text x="1036" y="336" font-size="12.5" font-weight="700" fill="#1F2328">rag.py</text>
+<text x="1036" y="350" font-size="10" fill="#57606A">BM25 retrieval → grounded prompt</text>
+<rect x="990" y="384" width="340" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(1002.0,404.0)"><rect width="24" height="24" rx="5" fill="#1F6FEB"/><g fill="#fff"><path d="M9.4 7.6l-4 4.4 4 4.4 1.2-1.2-2.8-3.2 2.8-3.2zm5.2 0l-1.2 1.2 2.8 3.2-2.8 3.2 1.2 1.2 4-4.4z"/></g></g>
+<text x="1036" y="414" font-size="12.5" font-weight="700" fill="#1F2328">FastAPI server</text>
+<text x="1036" y="428" font-size="10" fill="#57606A">/query /healthz · Docker · the k6 target</text>
+<rect x="990" y="462" width="340" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(1002.0,482.0)"><rect width="24" height="24" rx="5" fill="#F6F8FA" stroke="#D0D7DE"/><g fill="#57606A"><path d="M8 6h5.4l3.6 3.6V18a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z" fill="#fff" stroke="#57606A" stroke-width="1.1"/><path d="M9.4 12.4h5.2v1H9.4zm0 2.6h5.2v1H9.4zm0-5.2h3v1h-3z"/></g></g>
+<text x="1036" y="492" font-size="12.5" font-weight="700" fill="#1F2328">app/corpus/</text>
+<text x="1036" y="506" font-size="10" fill="#57606A">6 markdown docs — the whole knowledge base</text>
+<rect x="990" y="600" width="340" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(1002.0,620.0)"><rect width="24" height="24" rx="5" fill="#8250DF"/><g fill="#fff"><circle cx="8.4" cy="8.6" r="2.1"/><circle cx="15.6" cy="8.6" r="2.1"/><circle cx="12" cy="15.4" r="2.1"/><circle cx="12" cy="11" r="1.5"/><path d="M9.8 9.6l1.5 1-.6.9-1.5-1zm4.4 0l-1.5 1 .6.9 1.5-1zm-2.2 3.1h.9v1.4h-.9z"/></g></g>
+<text x="1036" y="630" font-size="12.5" font-weight="700" fill="#1F2328">Anthropic API — claude-opus-5</text>
+<text x="1036" y="644" font-size="10" fill="#57606A">generator + RAGAS judge · local embeddings for RAGAS</text>
+<rect x="330" y="656" width="180" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(342.0,676.0)"><circle cx="12" cy="12" r="11" fill="#1A7F37"/><path d="M7.4 12.4l3 3 6-6.4" stroke="#fff" stroke-width="2.2" fill="none"/></g>
+<text x="376" y="686" font-size="12.5" font-weight="700" fill="#1F2328">verify-gate</text>
+<text x="376" y="700" font-size="10" fill="#57606A">re-reads the verdict</text>
+<rect x="530" y="656" width="170" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(542.0,676.0)"><rect width="24" height="24" rx="5" fill="#0969DA"/><path d="M8.2 17.4a3.6 3.6 0 0 1-.4-7.2 4.6 4.6 0 0 1 8.7 1.1 3.1 3.1 0 0 1-.6 6.1z" fill="#fff"/></g>
+<text x="576" y="686" font-size="12.5" font-weight="700" fill="#1F2328">deploy-staging</text>
+<text x="576" y="700" font-size="10" fill="#57606A">OIDC</text>
+<rect x="720" y="656" width="180" height="64" rx="7" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.2"/>
+<g transform="translate(732.0,676.0)"><rect width="24" height="24" rx="5" fill="#1A7F37"/><g fill="#fff"><rect x="6" y="12" width="2.8" height="6" rx=".6"/><rect x="10.6" y="8.4" width="2.8" height="9.6" rx=".6"/><rect x="15.2" y="10.4" width="2.8" height="7.6" rx=".6"/></g></g>
+<text x="766" y="686" font-size="12.5" font-weight="700" fill="#1F2328">post-deploy eval</text>
+<text x="766" y="700" font-size="10" fill="#57606A">thresholds-smoke.yaml</text>
+<text x="700" y="800" font-size="10" fill="#57606A" text-anchor="middle">solid = pipeline / data flow   ·   dashed = LLM calls &amp; scheduled runs   ·   both gates are committed thresholds that exit non-zero</text>
+</svg>
